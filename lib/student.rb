@@ -1,15 +1,18 @@
 class Student
+  #setter & getters
 attr_accessor :name , :grade
 attr_reader :id
+
   # Remember, you can access your database connection anywhere in this class
   #  with DB[:conn]  
+  #initialize instance variables 
   def initialize(name, grade, id = nil)
     @name=name
     @grade=grade
     @id=id 
   
   end
-  
+   #class methods for database
   def self.create_table
     sql =  <<-SQL 
       CREATE TABLE IF NOT EXISTS students (
@@ -20,7 +23,7 @@ attr_reader :id
         SQL
     DB[:conn].execute(sql) 
   end
-
+ #class methods DROP database
   def self.drop_table
  sql = <<-SQL
       DROP TABLE IF EXISTS students
@@ -28,6 +31,7 @@ attr_reader :id
   DB[:conn].execute(sql)
   end
   
+  #instance method INSERT db 
   def save
     sql = <<-SQL
       INSERT INTO students (name,grade)
@@ -39,9 +43,12 @@ attr_reader :id
     @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
 
   end
-  
-def self.create(name:, grade:)
-  student = Student.new(name, grade)
-  student.save
-  student
-end 
+  # class method takes in two keyword arguments 
+  #instantitation of new object
+  def self.create(name:, grade:)
+    student = Student.new(name, grade)
+    student.save
+    student
+  end 
+
+end   
